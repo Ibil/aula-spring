@@ -17,32 +17,37 @@ import pt.ulisboa.tecnico.softeng.bank.exception.BankException;
 @RequestMapping(value = "/banks/bank/{code}/clients")
 public class ClientController {
 	private static Logger logger = LoggerFactory.getLogger(ClientController.class);
+	
+	public Bank bank;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String showClients(Model model, @PathVariable String code) {
-//		logger.info("showClients code:{}", code);
-//		
-//		Bank bank = Bank.getBankByCode(code);
-//		
-//		model.addAttribute("bank", bank);
+		logger.info("showClients code:{}", code);
+		
+		 if(bank == null){
+			 bank = Bank.getBankByCode(code);
+		 }
+		
+		model.addAttribute("bank", bank);
 		return "clients";
 	}
-//
-//	@RequestMapping(method = RequestMethod.POST)
-//	public String bankSubmit(Model model, @ModelAttribute Bank bank) {
-//		logger.info("bankSubmit name:{}, code:{}", bank.getName(), bank.getCode());
-//
-//		try {
-//			new Bank(bank.getName(), bank.getCode());
-//		} catch (BankException be) {
-//			model.addAttribute("error", "Error: it was not possible to create the bank");
-//			model.addAttribute("bank", bank);
-//			model.addAttribute("banks", Bank.banks);
-//			return "banks";
-//		}
-//
-//		return "redirect:/banks";
-//	}
+
+	@RequestMapping(method = RequestMethod.POST)
+	public String clientSubmit(Model model, @ModelAttribute Bank bank, @ModelAttribute Client client) {
+		logger.info("clientSubmit bankname:{}, code:{}, clientName:{}, clientId:{}", 
+				bank.getName(), bank.getCode(), client.getName(), client.getId());
+
+		try {
+			new Client(bank, client.getId(), client.getName(), client.getAge());
+		} catch (BankException be) {
+			model.addAttribute("error", "Error: it was not possible to create the client");
+			model.addAttribute("bank", bank);
+			return "redirect:/clients";
+		}
+		model.addAttribute("error", "");
+		model.addAttribute("bank", bank);
+		return "redirect:/clients";
+	}
 //
 //	@RequestMapping(value = "/bank/{code}", method = RequestMethod.GET)
 //	public String showBank(Model model, @PathVariable String code) {
