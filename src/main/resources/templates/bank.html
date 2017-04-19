@@ -31,9 +31,7 @@
 						<td th:text="${client.name}">Name</td>
 						<td th:text="${client.id}">ID</td>
 						<td th:text="${client.age}">Age</td>
-						<!--  pode vir a dar jeito
-						<td><a th:href="@{/banks/bank/{code}(code=${bank.code})}">Page</a></td>
-						-->
+						<td><a th:href="@{/banks/bank/{code}/clients/client/{id}(code=${bank.code}, id=${client.id})}">Page</a></td>
 					</tr>
 				</tbody>
 			</table>
