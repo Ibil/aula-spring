@@ -1,5 +1,7 @@
 package pt.ulisboa.tecnico.softeng.bank.controller;
 
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -35,11 +37,11 @@ public class ClientController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String clientSubmit(Model model, @ModelAttribute Client client) { //, @PathVariable String code
+	public String clientSubmit(Model model, @ModelAttribute Client client, @PathVariable String code) { //
 		// safeguard
-//		if(bank == null){
-//			 bank = Bank.getBankByCode(code);
-//		 }
+		if(bank == null){
+			 bank = Bank.getBankByCode(code);
+		 }
 		logger.info("clientSubmit bankname:{}, code:{}, clientName:{}, clientId:{}", 
 				bank.getName(), bank.getCode(), client.getName(), client.getId());
 
@@ -53,17 +55,26 @@ public class ClientController {
 		}
 		return "redirect:/banks/bank/{code}/clients";
 	}
-//
-//	@RequestMapping(value = "/bank/{code}", method = RequestMethod.GET)
-//	public String showBank(Model model, @PathVariable String code) {
-//		logger.info("showBank code:{}", code);
-//
-//		Bank bank = Bank.getBankByCode(code);
-//
-//		new Client(bank, "ID01", "Zé", 22);
-//		new Client(bank, "ID02", "Manel", 44);
-//
-//		model.addAttribute("bank", bank);
-//		return "bank";
-//	}
+
+	@RequestMapping(value = "/client/{id}", method = RequestMethod.GET)
+	public String showBank(Model model, @PathVariable String code, @PathVariable String id) {
+		logger.info("showClients code:{} ; id:{}", code, id);
+		
+		Bank bank = Bank.getBankByCode(code);
+		Client cl = null;
+		
+		for(Client clTemp : bank.getClients()){
+			if(clTemp.getId().equals(id)){
+				cl = clTemp;
+				break;
+			}
+		}
+		if(cl==null){
+			model.addAttribute("error", "Error: client doesn't exist");
+		}
+		else{
+			model.addAttribute("client", cl);
+		}
+		return "client";
+	}
 }
