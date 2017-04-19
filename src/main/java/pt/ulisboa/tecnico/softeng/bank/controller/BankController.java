@@ -48,8 +48,6 @@ public class BankController {
 
 		Bank bank = Bank.getBankByCode(code);
 
-		new Client(bank, "ID01", "Zé", 22);
-		new Client(bank, "ID02", "Manel", 44);
 
 		model.addAttribute("bank", bank);
 		return "bank";

@@ -49,7 +49,7 @@ public class ClientController {
 			//suposto guardar agora o obj na BD
 			new Client(bank, client.getId(), client.getName(), client.getAge());
 		} catch (BankException be) {
-			model.addAttribute("error", "Error: it was not possible to create the client");
+			model.addAttribute("error", "Error: it was not possible to create the client, probably the id already exists");
 			model.addAttribute("bank", bank);
 			return "clients";
 		}
