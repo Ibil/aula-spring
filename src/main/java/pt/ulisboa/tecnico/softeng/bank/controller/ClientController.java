@@ -27,26 +27,31 @@ public class ClientController {
 		 if(bank == null){
 			 bank = Bank.getBankByCode(code);
 		 }
-		
+		 //passar para a view um new client vazio
+		 model.addAttribute("client", new Client());
+		 
 		model.addAttribute("bank", bank);
 		return "clients";
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String clientSubmit(Model model, @ModelAttribute Bank bank, @ModelAttribute Client client) {
+	public String clientSubmit(Model model, @ModelAttribute Client client) { //, @PathVariable String code
+		// safeguard
+//		if(bank == null){
+//			 bank = Bank.getBankByCode(code);
+//		 }
 		logger.info("clientSubmit bankname:{}, code:{}, clientName:{}, clientId:{}", 
 				bank.getName(), bank.getCode(), client.getName(), client.getId());
 
 		try {
+			//suposto guardar agora o obj na BD
 			new Client(bank, client.getId(), client.getName(), client.getAge());
 		} catch (BankException be) {
 			model.addAttribute("error", "Error: it was not possible to create the client");
 			model.addAttribute("bank", bank);
-			return "redirect:/clients";
+			return "clients";
 		}
-		model.addAttribute("error", "");
-		model.addAttribute("bank", bank);
-		return "redirect:/clients";
+		return "redirect:/banks/bank/{code}/clients";
 	}
 //
 //	@RequestMapping(value = "/bank/{code}", method = RequestMethod.GET)
