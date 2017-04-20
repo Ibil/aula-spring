@@ -20,15 +20,14 @@ import pt.ulisboa.tecnico.softeng.bank.exception.BankException;
 public class ClientController {
 	private static Logger logger = LoggerFactory.getLogger(ClientController.class);
 	
-	public Bank bank;
+	
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String showClients(Model model, @PathVariable String code) {
 		logger.info("showClients code:{}", code);
 		
-		 if(bank == null){
-			 bank = Bank.getBankByCode(code);
-		 }
+		Bank bank = Bank.getBankByCode(code);
+		 
 		 //passar para a view um new client vazio
 		 model.addAttribute("client", new Client());
 		 
@@ -38,10 +37,7 @@ public class ClientController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String clientSubmit(Model model, @ModelAttribute Client client, @PathVariable String code) { //
-		// safeguard
-		if(bank == null){
-			 bank = Bank.getBankByCode(code);
-		 }
+		Bank bank = Bank.getBankByCode(code);
 		logger.info("clientSubmit bankname:{}, code:{}, clientName:{}, clientId:{}", 
 				bank.getName(), bank.getCode(), client.getName(), client.getId());
 
@@ -66,14 +62,12 @@ public class ClientController {
 		for(Client clTemp : bank.getClients()){
 			if(clTemp.getId().equals(id)){
 				cl = clTemp;
+				model.addAttribute("client", cl);
 				break;
 			}
 		}
 		if(cl==null){
 			model.addAttribute("error", "Error: client doesn't exist");
-		}
-		else{
-			model.addAttribute("client", cl);
 		}
 		return "client";
 	}
